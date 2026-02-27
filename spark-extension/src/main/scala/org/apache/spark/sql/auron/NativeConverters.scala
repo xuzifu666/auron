@@ -965,6 +965,12 @@ object NativeConverters extends Logging {
               .setExpr(convertExprWithFallback(expr, isPruningExpr, fallback))
               .setInfix(infix.toString)))
 
+      case StringInstr(substr, str) =>
+        if substr.isInstanceOf[Literal] && str.dataType == StringType =>
+          buildExtScalarFunction("Spark_Position", substr :: str :: Nil, IntegerType)
+        else
+          fallback(expr)
+
       case Substring(str, Literal(pos, IntegerType), Literal(len, IntegerType))
           if pos.asInstanceOf[Int] > 0 && len.asInstanceOf[Int] >= 0 =>
         val longPos = pos.asInstanceOf[Int].toLong

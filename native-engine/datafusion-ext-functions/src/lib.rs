@@ -31,7 +31,9 @@ mod spark_make_array;
 mod spark_make_decimal;
 mod spark_normalize_nan_and_zero;
 mod spark_null_if;
+mod spark_position;
 mod spark_round;
+mod spark_soundex;
 mod spark_strings;
 mod spark_unscaled_value;
 
@@ -71,6 +73,7 @@ pub fn create_auron_ext_function(
         "Spark_StringLower" => Arc::new(spark_strings::string_lower),
         "Spark_StringUpper" => Arc::new(spark_strings::string_upper),
         "Spark_InitCap" => Arc::new(spark_initcap::string_initcap),
+        "Spark_Position" => Arc::new(spark_position::string_position),
         "Spark_Year" => Arc::new(spark_dates::spark_year),
         "Spark_Month" => Arc::new(spark_dates::spark_month),
         "Spark_Day" => Arc::new(spark_dates::spark_day),

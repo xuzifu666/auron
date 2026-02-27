@@ -650,4 +650,122 @@ class AuronFunctionSuite extends AuronQueryTest with BaseAuronSQLSuite {
       }
     }
   }
+
+  test("position function - basic functionality") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('hello world', 'world'),
+        | ('hello world', 'hello'),
+        | ('hello world', 'l'),
+        | ('hello world', 'z')
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str) FROM t1")
+    }
+  }
+
+  test("position function - with start position") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING, start INT) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('hello hello world', 'hello', 1),
+        | ('hello hello world', 'hello', 2),
+        | ('hello hello world', 'hello', 7),
+        | ('hello hello world', 'world', 1)
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str, start) FROM t1")
+    }
+  }
+
+  test("position function - empty substring") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING) USING parquet")
+      sql("INSERT INTO t1 VALUES ('hello'), (''), (NULL)")
+      checkSparkAnswerAndOperator("SELECT position('', str) FROM t1")
+    }
+  }
+
+  test("position function - null handling") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('hello', 'world'),
+        | (NULL, 'world'),
+        | ('hello', NULL),
+        | (NULL, NULL)
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str) FROM t1")
+    }
+  }
+
+  test("position function - case sensitivity") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('Hello World', 'hello'),
+        | ('Hello World', 'Hello'),
+        | ('HELLO WORLD', 'hello')
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str) FROM t1")
+    }
+  }
+
+  test("position function - multiple occurrences") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('abracadabra', 'a'),
+        | ('abracadabra', 'abra'),
+        | ('banana', 'ana')
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str) FROM t1")
+    }
+  }
+
+  test("position function - special characters") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('a-b-c', '-'),
+        | ('test@example.com', '@'),
+        | ('100%', '%')
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str) FROM t1")
+    }
+  }
+
+  test("position function - unicode and chinese") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('hello世界', '世界'),
+        | ('世界你好', '你好'),
+        | ('Über', 'Ü'),
+        | ('café', 'é')
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str) FROM t1")
+    }
+  }
+
+  test("position function - edge cases") {
+    withTable("t1") {
+      sql("CREATE TABLE t1(str STRING, substr STRING, start INT) USING parquet")
+      sql("""
+        |INSERT INTO t1 VALUES
+        | ('abc', 'abc', 1),
+        | ('abc', 'abc', 10),
+        | ('abc', 'abc', -1),
+        | ('a', 'a', 1),
+        | ('', '', 1)
+        |""".stripMargin)
+      checkSparkAnswerAndOperator("SELECT position(substr, str, start) FROM t1")
+    }
+  }
 }
