@@ -33,7 +33,6 @@ mod spark_normalize_nan_and_zero;
 mod spark_null_if;
 mod spark_position;
 mod spark_round;
-mod spark_soundex;
 mod spark_strings;
 mod spark_unscaled_value;
 
