@@ -23,7 +23,7 @@
 <p align="center"><img src="./dev/auron-logo.png" alt="Auron logo" /></p>
 
 The Auron accelerator for big data engines (e.g., Spark, Flink) leverages native vectorized execution to accelerate query processing. It combines
-the power of the [Apache DataFusion](https://arrow.apache.org/datafusion/) library and the scale of the distributed
+the power a of the [Apache DataFusion](https://arrow.apache.org/datafusion/) library and the scale of the distributed
 computing framework.
 
 Auron takes a fully optimized physical plan from a distributed computing framework, mapping it into DataFusion's execution plan, and performs native
