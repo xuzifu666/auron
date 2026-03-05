@@ -43,7 +43,7 @@ Based on the inherent well-defined extensibility of DataFusion, Auron can be eas
 - Simple and Aggregate functions.
 - File formats.
 
-We encourage you to extend [DataFusion](https://github.com/apache/arrow-datafusion) capability directly and add support in
+We encourage you to extend in [DataFusion](https://github.com/apache/arrow-datafusion) capability directly and add support in
 Auron with simple modifications in plan-serde and extension translation.
 
 ## Build from source
